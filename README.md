@@ -45,7 +45,9 @@ import GeometryPy as GDClient
 GDClient.PrintReturn = False
 
 Player = GDClient.GetUserInfo("Nerex") #You can also use an AccountID!
-print(Player) # return { 'username': 'Nerex', 
+print(Player) 
+
+""" returns: { 'username': 'Nerex', 
                        'stars': '1340', 
                        'usercoins': '130', 
                        'demons': '40', 
@@ -54,9 +56,10 @@ print(Player) # return { 'username': 'Nerex',
                        'twitter': '@Nerex1', 
                        'twitch': 'NerexGD', 
                        'accountid': '20207462', 
-                       'userid': '5837301' }
+                       'userid': '5837301' } 
+"""        
                        
-print(Player["username"] # return "Nerex"
+print(Player["username"]) # returns "Nerex"
 
 
 Level = GDClient.GetLevelInfo("Cataclysm") #You can also use a Level ID and specify a creator! (GDClient.GetLevelInfo("Cataclysm", "GgBoy")
@@ -64,5 +67,5 @@ print(Level["stars"]) # return 10
 
 
 LeaderboardCreators = GDClient.GetCreatorsLeaderboard(100)
-print(LeaderboardCreators[0]["username"]) # return ViPrIn
+print(LeaderboardCreators[0]["username"]) # returns ViPrIn
 ```
