@@ -17,7 +17,7 @@ import GeometryPy as [insert what you want here]
 
 After this, you'll need to add a line which will specify if you want to print the results of the functions, or no.
 ```Python
-GDClient.PrintReturn = False #Default=False
+GDClient.PrintReturn = False #Default = False
 ```
 
 You can now start to use GeometryPy! Enjoy!
