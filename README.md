@@ -1,9 +1,9 @@
 # GeometryPy
 A Geometry Dash library written in Python.
-# Install
-Install the library and add to your project directory. You're ready to go!
+# Installation
+You can install the library here https://github.com/NerexGD/GeometryPy/releases/ but you can also download it by clicking the green button "Clone or Download". Extract GeometryPy from the .zip and add it to your project directory. You're ready to go!
 # Usage
-GeometryPy have a lot of features: Get user stats, Get level info and more.
+GeometryPy have a lot of features: Get user stats, Get level info, Get featured levels, and more!
 
 Get started by importing the package to your project
 ```Python
@@ -12,5 +12,57 @@ or
 import GeometryPy as GDClient
 or
 import GeometryPy as [insert what you want here]
+#Because i know we're sometimes lazy to write a long word
 ```
 
+After this, you'll need to add a line which will specify if you want to print the results of the functions, or no.
+```Python
+GDClient.PrintReturn = False #Default=False
+```
+
+You can now start to use GeometryPy! Enjoy!
+
+# Functions
+| Function | Parameters | Result |
+|------|------|------------|
+| GetUserInfo | AccountID or Username | Return a dict which contains informations about an **User** |
+| GetLevelInfo | Level Name or LevelID, *Creator (optional)* | Return a dict which contains informations about a **Level**
+| GetSongInfo | SongID | Return a dict which contains informations about a **Song** |
+| GetPlayersLeaderboard | Players Amount | Return a list which contains multiples dicts with **top players stats** |
+| GetCreatorsLeaderboard | Players Amount | Return a list which contains multiples dicts with **top creators stats** |
+| GetFeaturedLevels | Page | Return a list which contains multiples dicts with **featured levels info** |
+| GetMostDownloadedLevels | Page | Return a list which contains multiples dicts with most **downloaded levels info** |
+| GetMostLikedLevels | Page | Return a list which contains multiples dicts with **most liked levels info** |
+| GetRecentLevels | Page | Return a list which contains multiples dicts with **recents levels info** |
+| GetAwardedLevels | Page | Return a list which contains multiples dicts with **awarded levels info** |
+| GetMagicLevels | Page | Return a list which contains multiples dicts with **magics levels info** |
+
+# Example
+Get player stats
+```Python
+import GeometryPy as GDClient
+
+GDClient.PrintReturn = False
+
+Player = GDClient.GetUserInfo("Nerex") #You can also use an AccountID!
+print(Player) # return { 'username': 'Nerex', 
+                       'stars': '1340', 
+                       'usercoins': '130', 
+                       'demons': '40', 
+                       'diamonds': '1919', 
+                       'youtube': 'UC5JsIMU43qQw9ggxdVpJgRg', 
+                       'twitter': '@Nerex1', 
+                       'twitch': 'NerexGD', 
+                       'accountid': '20207462', 
+                       'userid': '5837301' }
+                       
+print(Player["username"] # return "Nerex"
+
+
+Level = GDClient.GetLevelInfo("Cataclysm") #You can also use a Level ID and specify a creator! (GDClient.GetLevelInfo("Cataclysm", "GgBoy")
+print(Level["stars"]) # return 10
+
+
+LeaderboardCreators = GDClient.GetCreatorsLeaderboard(100)
+print(LeaderboardCreators[0]["username"]) # return ViPrIn
+```
