@@ -26,7 +26,6 @@ def GetUserInfo(accID, printbool):
     }
     parameters = utils.StructParams(params)    
     data = utils.SendRequest(url, parameters)
-    print(data)
     parser = data.split(":")
 
     user = {
