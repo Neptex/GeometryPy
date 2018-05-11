@@ -2,5 +2,5 @@ import GeometryPy as GDClient
 
 GDClient.PrintReturn = False
 
-data = GDClient.GetAvailableGauntlets()
+data = GDClient.GetUserInfo("Nerex")
 print(data)
