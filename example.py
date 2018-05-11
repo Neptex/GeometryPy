@@ -4,7 +4,7 @@ GDClient.PrintReturn = False #Set to false if you don't want the functions retur
 
 data = GDClient.GetUserInfo("Nerex")
 
-print(data) # return { 'username': 'Nerex', 
+print(data) # returns { 'username': 'Nerex', 
                        'stars': '1340', 
                        'usercoins': '130', 
                        'demons': '40', 
