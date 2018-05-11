@@ -46,8 +46,8 @@ GDClient.PrintReturn = False
 
 Player = GDClient.GetUserInfo("Nerex") #You can also use an AccountID!
 print(Player) 
-"""
-returns: { 'username': 'Nerex', 
+
+""" returns: { 'username': 'Nerex', 
                        'stars': '1340', 
                        'usercoins': '130', 
                        'demons': '40', 
@@ -56,8 +56,9 @@ returns: { 'username': 'Nerex',
                        'twitter': '@Nerex1', 
                        'twitch': 'NerexGD', 
                        'accountid': '20207462', 
-                       'userid': '5837301' }
-"""                       
+                       'userid': '5837301' } 
+"""        
+                       
 print(Player["username"]) # returns "Nerex"
 
 
