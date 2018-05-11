@@ -1,6 +1,6 @@
 import GeometryPy as GDClient
 
-GDClient.PrintReturn = False #Set to false if you don't want the functions returns printed
+GDClient.PrintReturn = False #Set to false if you don't want the functions returns automatically printed
 
 data = GDClient.GetUserInfo("Nerex")
 print(data) # return { 'username': 'Nerex', 
@@ -16,3 +16,7 @@ print(data) # return { 'username': 'Nerex',
 
                 
 print(data["username"]) #return "Nerex"
+
+GDClient.PrintReturn = True
+
+
