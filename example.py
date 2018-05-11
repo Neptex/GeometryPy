@@ -17,7 +17,3 @@ print(data) # return { 'username': 'Nerex',
 
                 
 print(data["username"]) #return "Nerex"
-
-GDClient.PrintReturn = True
-
-
