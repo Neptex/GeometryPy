@@ -42,8 +42,6 @@ In this example, you can get stats of the user "Nerex", Get infos of the level "
 ```Python
 import GeometryPy as GDClient
 
-GDClient.PrintReturn = False
-
 Player = GDClient.GetUserInfo("Nerex") #You can also use an AccountID!
 print(Player) 
 
