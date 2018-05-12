@@ -219,7 +219,7 @@ def GetSongInfo(songid, printbool):
         
     return song
 
-def GetDailyLevel(printbool): #Unfinished because abnormally not working
+def GetDailyLevel(printbool):
     url = "http://www.boomlings.com/database/downloadGJLevel22.php"
     params = {
         "gameVersion": "21",
@@ -231,13 +231,10 @@ def GetDailyLevel(printbool): #Unfinished because abnormally not working
     }
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
-    
-    if printbool:
-        print(recdata)
-        
-    return recdata
+    data = GetLevelInfo(recdata.split(":")[1], "", printbool)
+    return data
 
-def GetWeeklyLevel(printbool): #Unfinished because abnormally not working
+def GetWeeklyLevel(printbool):
     url = "http://www.boomlings.com/database/downloadGJLevel22.php"
     params = {
         "gameVersion": "21",
@@ -249,11 +246,8 @@ def GetWeeklyLevel(printbool): #Unfinished because abnormally not working
     }
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
-    
-    if printbool:
-        print(recdata)
-        
-    return recdata    
+    data = GetLevelInfo(recdata.split(":")[1], "", printbool)
+    return data
 
 def GetPlayersLeaderboard(playercount, printbool):
     url = "http://www.boomlings.com/database/getGJScores20.php"
@@ -660,7 +654,6 @@ def GetAwardedLevels(page, printbool):
                 "length": utils.GetLength(data[37])
             }
 
-
             LevelsList.append(leveldata)
         except:
             pass
@@ -724,7 +717,6 @@ def GetMagicLevels(page, printbool):
                 "difficulty": utils.GetDifficulty(data),
                 "length": utils.GetLength(data[37])
             }
-
 
             LevelsList.append(leveldata)
         except:
