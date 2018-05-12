@@ -1,6 +1,5 @@
 import GeometryPy.utils as utils
 import base64
-import GeometryPy as gtk
 
 ##################################################
 ##                                              ##
