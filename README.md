@@ -38,7 +38,7 @@ You can now start to use GeometryPy! Enjoy!
 | GetMagicLevels | Page | Return a list which contains multiples dicts with **magics levels info** |
 
 # Example
-Get player stats
+In this example, you can get stats of the user "Nerex", Get infos of the level "Cataclysm" but also get the top 100 creators leaderboard!
 ```Python
 import GeometryPy as GDClient
 
