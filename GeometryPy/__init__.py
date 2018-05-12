@@ -16,13 +16,13 @@ def GetSongInfo(songid):
     result = GDPyCommands.GetSongInfo(songid, PrintReturn)
     return result
 
-#def GetDailyLevel():
-#    result = GDPyCommands.GetDailyLevel(PrintReturn)
-#    return result
+def GetDailyLevel():
+    result = GDPyCommands.GetDailyLevel(PrintReturn)
+    return result
 
-#def GetWeeklyLevel():
-#    result = GDPyCommands.GetWeeklyLevel(PrintReturn)
-#    return result
+def GetWeeklyLevel():
+    result = GDPyCommands.GetWeeklyLevel(PrintReturn)
+    return result
 
 def GetPlayersLeaderboard(playercount):
     result = GDPyCommands.GetPlayersLeaderboard(playercount, PrintReturn)
