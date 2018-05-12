@@ -7,8 +7,6 @@
   <br />
   <p>
 </div>
-# 
-A Geometry Dash API library written in Python.
 # Installation
 You can install the library here https://github.com/NerexGD/GeometryPy/releases/ but you can also download it by clicking the green button "Clone or Download". Extract GeometryPy from the .zip and add it to your project directory. You're ready to go!
 # Usage
