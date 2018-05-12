@@ -15,11 +15,6 @@ import GeometryPy as [insert what you want here]
 #Because i know we're sometimes lazy to write a long word
 ```
 
-After this, you'll need to add a line which will specify if you want to print the results of the functions, or no.
-```Python
-GDClient.PrintReturn = False #Default = False
-```
-
 You can now start to use GeometryPy! Enjoy!
 
 # Functions
