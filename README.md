@@ -1,5 +1,15 @@
 # GeometryPy
 A Geometry Dash API library written in Python.
+
+<div align="center">
+  <br />
+  <p>
+    <a><img src="https://www.noelshack.com/2018-19-6-1526157276-sans-titre.png" width="546" alt="GeometryPy" /></a>
+  </p>
+  <br />
+  <p>
+</div>
+
 # Installation
 You can install the library here https://github.com/NerexGD/GeometryPy/releases/ but you can also download it by clicking the green button "Clone or Download". Extract GeometryPy from the .zip and add it to your project directory. You're ready to go!
 # Usage
