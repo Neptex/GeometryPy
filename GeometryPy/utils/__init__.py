@@ -4,8 +4,10 @@ import itertools
 from itertools import cycle
 import base64
 
-LEVEL_NOT_FOUND_ERROR = "NO_LEVEL_FOUND"
-    
+LEVEL_NOT_FOUND_ERROR = "NO_LEVELS_FOUND"
+USER_NOT_FOUND_ERROR = "USER_NOT_FOUND"
+SONG_NOT_FOUND_ERROR = "SONG_NOT_FOUND"
+
 def StructParams(params):
     FinalParams = ""
     for value in params:
@@ -16,8 +18,13 @@ def StructParams(params):
     FinalParams = FinalParams.encode()
     return FinalParams
     
-def SendRequest(url, params):
-    data = urlopen(url, params).read().decode()
+def SendHTTPRequest(php, params):
+    BaseURL = "http://www.boomlings.com/database/"
+    URL = BaseURL + php + ".php"
+
+    URLParameters = StructParams(params)
+    
+    data = urlopen(URL, URLParameters).read().decode()
     return data
 
 def GetDifficulty(List):
@@ -70,3 +77,22 @@ def GetLength(lengthint):
         length = "XL"
 
     return length
+
+def StructureUser(parser):
+    
+    ## Create a dictionnary
+    StructuredUser = {
+        "username": parser[1],
+        "stars": parser[13],
+        "usercoins": parser[7],
+        "demons": parser[17],
+        "diamonds": parser[15],
+        "cp": parser[19],
+        "youtube": parser[27],
+        "twitter": "@"+parser[53],
+        "twitch": parser[55],
+        "accountid": parser[3],
+        "userid": parser[49]
+        }
+
+    return StructuredUser
