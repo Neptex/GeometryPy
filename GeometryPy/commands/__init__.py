@@ -123,7 +123,7 @@ def GetLevelInfo(levelName, author, printbool):
         params = {
             "gameVersion": "21",
             "binaryVersion": "35",
-            "gdw": "0",
+            "gdw": "0", 
             "str": str(levelName),
             "len": "-",
             "type": "0",
