@@ -3,7 +3,7 @@ import base64
 
 def GetUserInfo(accID, printbool):
     #Send HTTP request to get infos using accountID or username
-    if not accID.isdigit():
+    if not str(accID).isdigit():
         url = "http://www.boomlings.com/database/getGJUsers20.php"
         params = {
             "gameVersion": "21",
@@ -14,7 +14,13 @@ def GetUserInfo(accID, printbool):
         }
         parameters = utils.StructParams(params)    
         data = utils.SendRequest(url, parameters)
-        accID = data.split(":")[21]
+        
+        if data != "-1":
+            accID = data.split(":")[21]
+        else:
+            if printbool:
+                print("-1")
+            return "-1"
 
     url = "http://www.boomlings.com/database/getGJUserInfo20.php"
     params = {
@@ -26,8 +32,13 @@ def GetUserInfo(accID, printbool):
     }
     parameters = utils.StructParams(params)    
     data = utils.SendRequest(url, parameters)
+    
+    if data == "-1":
+        if printbool:
+            print("-1")            
+        return "-1"
+    
     parser = data.split(":")
-
     user = {
         "username": parser[1],
         "stars": parser[13],
@@ -62,6 +73,11 @@ def GetLevelInfo(levelName, author, printbool):
         parameters = utils.StructParams(params)
         userdata = utils.SendRequest(url, parameters)
 
+        if userdata == "-1":
+            if printbool:
+               print("-1")            
+            return "-1"
+        
         #Use the accountID of the author to fetch the levels
         url = "http://www.boomlings.com/database/getGJLevels21.php"
         params = {
@@ -83,6 +99,12 @@ def GetLevelInfo(levelName, author, printbool):
         }
         parameters = utils.StructParams(params)  
         recdata = utils.SendRequest(url, parameters)
+
+        if recdata == "-1":
+            if printbool:
+               print("-1")            
+            return "-1"
+        
         levelparser = recdata.split("|")
         levelIndex = 0
 
@@ -117,6 +139,12 @@ def GetLevelInfo(levelName, author, printbool):
         }
         parameters = utils.StructParams(params)  
         recdata = utils.SendRequest(url, parameters)
+
+        if recdata == "-1":
+            if printbool:
+               print("-1")            
+            return "-1"
+        
         levelparser = recdata.split("|")
         levelIndex = 0
 
@@ -125,31 +153,36 @@ def GetLevelInfo(levelName, author, printbool):
         return utils.LEVEL_NOT_FOUND_ERROR
     else:
         authorIndex = 0
-        data = levelparser[levelIndex].split(":")
-        userdata = recdata.split("#")[1].split("|")
-        for i in range(len(userdata)):
-            if userdata[i].split(":")[0] == data[7]:
-                authorIndex = i
-                break
+        try:
+            data = levelparser[levelIndex].split(":")
+            userdata = recdata.split("#")[1].split("|")
+            for i in range(len(userdata)):
+                if userdata[i].split(":")[0] == data[7]:
+                    authorIndex = i
+                    break
 
-        if data[39] == "0":
-            data[39] = "true"
-            
-        leveldata = {
-            "name": data[3],
-            "author": {
-                "name": userdata[authorIndex].split(":")[1],
-                "accountid": userdata[authorIndex].split(":")[0],
-                "userid": userdata[authorIndex].split(":")[2]
-                },
-            "id": data[1],
-            "downloads": data[13],
-            "likes": data[19],
-            "description": base64.b64decode(str(data[35])).decode(),
-            "original": data[39],
-            "difficulty": utils.GetDifficulty(data),
-            "length": utils.GetLength(data[37])
-            }
+            if data[39] == "0":
+                data[39] = "true"
+                
+            leveldata = {
+                "name": data[3],
+                "author": {
+                    "name": userdata[authorIndex].split(":")[1],
+                    "accountid": userdata[authorIndex].split(":")[0],
+                    "userid": userdata[authorIndex].split(":")[2]
+                    },
+                "id": data[1],
+                "downloads": data[13],
+                "likes": data[19],
+                "description": base64.b64decode(str(data[35])).decode(),
+                "original": data[39],
+                "difficulty": utils.GetDifficulty(data),
+                "length": utils.GetLength(data[37])
+                }
+        except:
+            if printbool:
+                print("ERROR")
+            return "ERROR"
         
         if printbool:
             print(leveldata)
@@ -168,6 +201,11 @@ def GetSongInfo(songid, printbool):
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
     data = recdata.split("~|~")
+    
+    if recdata == "-1":
+        if printbool:
+            print("-1")            
+        return "-1"
     
     song = {
         "name": data[3],
@@ -230,6 +268,12 @@ def GetPlayersLeaderboard(playercount, printbool):
     }
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
+
+    if recdata == "-1":
+        if printbool:
+            print("-1")            
+        return "-1"
+    
     data = recdata.split("|")
     UsersList = []
     
@@ -269,6 +313,12 @@ def GetCreatorsLeaderboard(playercount, printbool):
     }
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
+
+    if recdata == "-1":
+        if printbool:
+            print("-1")            
+        return "-1"
+    
     data = recdata.split("|")
     UsersList = []
     
@@ -316,6 +366,12 @@ def GetFeaturedLevels(page, printbool):
     }
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
+
+    if recdata == "-1":
+        if printbool:
+            print("-1")            
+        return "-1"
+    
     levelparser = recdata.split("|")
     userdata = recdata.split("#")[1].split("|")
     LevelsList = []
@@ -376,6 +432,12 @@ def GetMostDownloadedLevels(page, printbool):
     }
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
+
+    if recdata == "-1":
+        if printbool:
+            print("-1")            
+        return "-1"
+    
     levelparser = recdata.split("|")
     userdata = recdata.split("#")[1].split("|")
     LevelsList = []
@@ -436,6 +498,12 @@ def GetTrending(page, printbool):
     }
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
+
+    if recdata == "-1":
+        if printbool:
+            print("-1")            
+        return "-1"
+    
     levelparser = recdata.split("|")
     userdata = recdata.split("#")[1].split("|")
     LevelsList = []
@@ -496,6 +564,12 @@ def GetRecentLevels(page, printbool):
     }
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
+
+    if recdata == "-1":
+        if printbool:
+            print("-1")            
+        return "-1"
+    
     levelparser = recdata.split("|")
     userdata = recdata.split("#")[1].split("|")
     LevelsList = []
@@ -556,6 +630,12 @@ def GetAwardedLevels(page, printbool):
     }
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
+
+    if recdata == "-1":
+        if printbool:
+            print("-1")            
+        return "-1"
+    
     levelparser = recdata.split("|")
     userdata = recdata.split("#")[1].split("|")
     LevelsList = []
@@ -616,6 +696,12 @@ def GetMagicLevels(page, printbool):
     }
     parameters = utils.StructParams(params)  
     recdata = utils.SendRequest(url, parameters)
+
+    if recdata == "-1":
+        if printbool:
+            print("-1")            
+        return "-1"
+    
     levelparser = recdata.split("|")
     userdata = recdata.split("#")[1].split("|")
     LevelsList = []
