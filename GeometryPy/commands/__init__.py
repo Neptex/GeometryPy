@@ -45,6 +45,7 @@ def GetUserInfo(accID, printbool):
         "usercoins": parser[7],
         "demons": parser[17],
         "diamonds": parser[15],
+        "cp": parser[19],
         "youtube": parser[27],
         "twitter": "@"+parser[53],
         "twitch": parser[55],
