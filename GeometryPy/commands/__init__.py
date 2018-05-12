@@ -1,228 +1,267 @@
 import GeometryPy.utils as utils
 import base64
+import GeometryPy as gtk
 
-def GetUserInfo(accID, printbool):
-    #Send HTTP request to get infos using accountID or username
-    if not str(accID).isdigit():
-        url = "http://www.boomlings.com/database/getGJUsers20.php"
-        params = {
+##################################################
+##                                              ##
+##  GET USERS INFORMATIONS                      ##
+##  PARAMS: ACCOUNTID or USERNAME               ##
+##                                              ##
+
+def GetUserInfo(User):
+    User = str(User)
+    AccountID = User
+    
+    if User == "":
+        return
+    elif not User.isdigit():
+
+        ## Get AccountID using Username
+        URLParameters = {
             "gameVersion": "21",
             "binaryVersion": "35",
             "gdw": "0",
-            "str": str(accID),
+            "str": User,
             "secret": "Wmfd2893gb7"
-        }
-        parameters = utils.StructParams(params)    
-        data = utils.SendRequest(url, parameters)
+        }        
+        Response = utils.SendHTTPRequest("getGJUsers20", URLParameters)
         
-        if data != "-1":
-            accID = data.split(":")[21]
+        if Response != "-1":
+            AccountID = Response.split(":")[21]
         else:
-            if printbool:
-                print("-1")
-            return "-1"
-
-    url = "http://www.boomlings.com/database/getGJUserInfo20.php"
-    params = {
+            return -1
+        
+    ## Search Player
+    URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
         "gdw": "0",
-        "targetAccountID": str(accID),
+        "targetAccountID": AccountID,
         "secret": "Wmfd2893gb7"
     }
-    parameters = utils.StructParams(params)    
-    data = utils.SendRequest(url, parameters)
+    Response = utils.SendHTTPRequest("getGJUserInfo20", URLParameters)
     
-    if data == "-1":
-        if printbool:
-            print("-1")            
-        return "-1"
+    if Response == "-1":          
+        return -1
     
-    parser = data.split(":")
-    user = {
-        "username": parser[1],
-        "stars": parser[13],
-        "usercoins": parser[7],
-        "demons": parser[17],
-        "diamonds": parser[15],
-        "cp": parser[19],
-        "youtube": parser[27],
-        "twitter": "@"+parser[53],
-        "twitch": parser[55],
-        "accountid": parser[3],
-        "userid": parser[49]
-        }
-    
-    if printbool:
-        print(user)
+    DataParser = Response.split(":")
+    UserInfos = utils.StructureUser(DataParser)
         
-    return user
+    return UserInfos
 
-def GetLevelInfo(levelName, author, printbool):
-    if author != "" and author != None:
-        #Send HTTP request to get infos from author
-        url = "http://www.boomlings.com/database/getGJUsers20.php"
-        params = {
-            "gameVersion": "21",
-            "binaryVersion": "35",
-            "str": str(author),
-            "total": "0",
-            "page": "0",
-            "secret": "Wmfd2893gb7"
+##################################################
+##                                              ##
+##  GET LEVEL INFORMATIONS USING HTTP REQUESTS  ##
+##  PARAMS: LEVELNAME and AUTHOR (optional)     ##
+##                                              ##
 
-        }
-        parameters = utils.StructParams(params)
-        userdata = utils.SendRequest(url, parameters)
-
-        if userdata == "-1":
-            if printbool:
-               print("-1")            
-            return "-1"
-        
-        #Use the accountID of the author to fetch the levels
-        url = "http://www.boomlings.com/database/getGJLevels21.php"
-        params = {
-            "gameVersion": "21",
-            "binaryVersion": "35",
-            "gdw": "0",
-            "str": str(userdata.split(":")[3]),
-            "len": "-",
-            "type": "5",
-            "diff": "-",
-            "featured": "0",
-            "original": "0",
-            "twoPlayer": "0",
-            "coins": "0",
-            "page": "0",
-            "epic": "0",
-            "secret": "Wmfd2893gb7"
-
-        }
-        parameters = utils.StructParams(params)  
-        recdata = utils.SendRequest(url, parameters)
-
-        if recdata == "-1":
-            if printbool:
-               print("-1")            
-            return "-1"
-        
-        levelparser = recdata.split("|")
-        levelIndex = 0
-
-        #Check for each levels if level name correspond to the researched one
-        for i in range(len(levelparser)):
-            parser = levelparser[i].split(":")
-            if parser[3].lower() == levelName.lower():
-                levelIndex = i
-                break
-            elif i == len(levelparser) - 1:
-                levelIndex = -1
-                break
+def GetLevelInfo(LevelName, creator):
+    if creator == "" or creator == None:
+        result = GetLevelInfoByName(LevelName)
+        return result
     else:
-        #Use the Level Name of the author to fetch the levels
-        url = "http://www.boomlings.com/database/getGJLevels21.php"
-        params = {
-            "gameVersion": "21",
-            "binaryVersion": "35",
-            "gdw": "0",
-            "str": str(levelName),
-            "len": "-",
-            "type": "0",
-            "diff": "-",
-            "featured": "0",
-            "original": "0",
-            "twoPlayer": "0",
-            "coins": "0",
-            "page": "0",
-            "epic": "0",
-            "secret": "Wmfd2893gb7"
-
-        }
-        parameters = utils.StructParams(params)  
-        recdata = utils.SendRequest(url, parameters)
-
-        if recdata == "-1":
-            if printbool:
-               print("-1")            
-            return "-1"
+        result = GetLevelInfoByAuthor(creator)
+        return result
+    
+##################################################        
+##                                              ##
+##   GET LEVEL USING LEVELNAME + CREATOR NAME   ##
+##                                              ##
         
-        levelparser = recdata.split("|")
-        levelIndex = 0
+def GetLevelInfoByAuthor(LevelName, Creator):
+    Creator = str(Creator)
+    
+    #Get the accountID of the researched creator
+    URLParameters = {
+        "gameVersion": "21",
+        "binaryVersion": "35",
+        "str": Creator,
+        "total": "0",
+        "page": "0",
+        "secret": "Wmfd2893gb7"}
+    
+    Response = utils.SendHTTPRequest("getGJUsers20", URLParameters)
+    
+    if Response == "-1":        
+        return -1
+
+    AccountID = str(Response.split(":")[3])
+    
+    #Use the accountID of the author to fetch his levels
+    URLParameters = {
+        "gameVersion": "21",
+        "binaryVersion": "35",
+        "gdw": "0",
+        "str": AccountID,
+        "len": "-",
+        "type": "5",
+        "diff": "-",
+        "featured": "0",
+        "original": "0",
+        "twoPlayer": "0",
+        "coins": "0",
+        "page": "0",
+        "epic": "0",
+        "secret": "Wmfd2893gb7"}
+    
+    Response = utils.SendHTTPRequest("getGJLevels21", URLParameters)
+
+    if Response == "-1":           
+        return -1
+    
+    LevelParser = recdata.split("|")
+    LevelIndex = 0
+    AuthorIndex = 0
+    
+    #Look for each levels in creator account to see if level name correspond to the researched one
+    for i in range(len(LevelParser)):
+        ThisLevel = LevelParser[i].split(":")
+        
+        if ThisLevel[3].lower() == levelName.lower():
+            LevelIndex = i
+            break
+        elif i == len(LevelParser) - 1:
+            LevelIndex = -1
+            break
 
     #Check if level found
     if levelIndex == -1:
         return utils.LEVEL_NOT_FOUND_ERROR
-    else:
-        authorIndex = 0
+    else:        
         try:
-            data = levelparser[levelIndex].split(":")
-            userdata = recdata.split("#")[1].split("|")
-            for i in range(len(userdata)):
-                if userdata[i].split(":")[0] == data[7]:
-                    authorIndex = i
+            LevelData = LevelParser[levelIndex].split(":")
+            AuthorsData = Response.split("#")[1].split("|")
+            
+            for i in range(len(AuthorsData)):
+                if AuthorsData[i].split(":")[0] == LevelData[7]:
+                    AuthorIndex = i
                     break
 
-            if data[39] == "0":
-                data[39] = "true"
+            if LevelData[39] == "0":
+                LevelData[39] = "true"
                 
-            leveldata = {
-                "name": data[3],
+            LevelInfos = {
+                "name": LevelData[3],
                 "author": {
-                    "name": userdata[authorIndex].split(":")[1],
-                    "accountid": userdata[authorIndex].split(":")[0],
-                    "userid": userdata[authorIndex].split(":")[2]
+                    "name": AuthorsData[authorIndex].split(":")[1],
+                    "accountid": AuthorsData[authorIndex].split(":")[0],
+                    "userid": AuthorsData[authorIndex].split(":")[2]
                     },
-                "id": data[1],
-                "downloads": data[13],
-                "likes": data[19],
-                "description": base64.b64decode(str(data[35])).decode(),
-                "original": data[39],
-                "difficulty": utils.GetDifficulty(data),
-                "length": utils.GetLength(data[37])
-                }
+                "id": LevelData[1],
+                "downloads": LevelData[13],
+                "likes": LevelData[19],
+                "description": LevelData.b64decode(str(LevelData[35])).decode(),
+                "original": LevelData[39],
+                "difficulty": utils.GetDifficulty(LevelData),
+                "length": utils.GetLength(LevelData[37])}
         except:
-            if printbool:
-                print("ERROR")
-            return "ERROR"
+            return -5
         
-        if printbool:
-            print(leveldata)
+        return LevelInfos
+    
+##                                              ##
+##   GET LEVEL INFORMATIONS USING LEVEL NAME    ##
+##                                              ##
+    
+def GetLevelInfoByName(LevelName):
+    LevelName = str(LevelName)
+    
+    URLParameters = {
+        "gameVersion": "21",
+        "binaryVersion": "35",
+        "gdw": "0",
+        "str": LevelName,
+        "len": "-",
+        "type": "0",
+        "diff": "-",
+        "featured": "0",
+        "original": "0",
+        "twoPlayer": "0",
+        "coins": "0",
+        "page": "0",
+        "epic": "0",
+        "secret": "Wmfd2893gb7"
 
-        return leveldata
+    }
+    Response = utils.SendHTTPRequest("getGJLevels21", URLParameters)
 
-def GetSongInfo(songid, printbool):
-    url = "http://www.boomlings.com/database/getGJSongInfo.php"
-    params = {
+    if Response == "-1":        
+        return -1
+    
+    LevelParser = Response.split("|")
+    AuthorIndex = 0
+    
+    try:
+        LevelData = LevelParser[0].split(":")
+        AuthorsData = Response.split("#")[1].split("|")
+
+        #Find level author informations
+        for i in range(len(AuthorsData)):
+            if AuthorsData[i].split(":")[0] == LevelData[7]:
+                AuthorIndex = i
+                break
+
+        if LevelData[39] == "0":
+            LevelData[39] = "true"
+            
+        LevelInfos = {
+            "name": LevelData[3],
+            "author": {
+                "name": AuthorsData[AuthorIndex].split(":")[1],
+                "accountid": AuthorsData[AuthorIndex].split(":")[0],
+                "userid": AuthorsData[AuthorIndex].split(":")[2]
+                },
+            "id": LevelData[1],
+            "downloads": LevelData[13],
+            "likes": LevelData[19],
+            "description": base64.b64decode(str(LevelData[35])).decode(),
+            "original": LevelData[39],
+            "difficulty": utils.GetDifficulty(LevelData),
+            "length": utils.GetLength(LevelData[37])
+            }
+        
+    except:
+        return -5
+
+    return LevelInfos
+##################################################
+##                                              ##
+##  GET SONG INFORMATIONS                       ##
+##  PARAMS: SONG ID                             ##
+##                                              ##
+
+def GetSongInfo(songid):
+    URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
         "songID": str(songid),
         "secret": "Wmfd2893gb7"
 
     }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
-    data = recdata.split("~|~")
+    Response = utils.SendRequest("getGJSongInfo", URLParameters)
     
-    if recdata == "-1":
-        if printbool:
-            print("-1")            
+    if Response == "-1":          
         return "-1"
     
-    song = {
-        "name": data[3],
-        "id": data[1],
-        "author": data[7],
-        "size": data[9] + "MB",
+    DataParser = recdata.split("~|~")
+    
+    SongInfos = {
+        "name": DataParser[3],
+        "id": DataParser[1],
+        "author": DataParser[7],
+        "size": DataParser[9] + "MB",
         }
         
-    if printbool:
-        print(song)
-        
-    return song
+    return SongInfos
 
-def GetDailyLevel(printbool):
-    url = "http://www.boomlings.com/database/downloadGJLevel22.php"
-    params = {
+##################################################
+##                                              ##
+##  GET DAILY INFORMATIONS                      ##
+##  PARAMS: NONE                                ##
+##                                              ##
+
+def GetDailyLevel():
+    URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
         "gdw": "0",
@@ -230,14 +269,21 @@ def GetDailyLevel(printbool):
         "secret": "Wmfd2893gb7"
 
     }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
-    data = GetLevelInfo(recdata.split(":")[1], "", printbool)
-    return data
+    Response = utils.SendHTTPRequest("downloadGJLevel22", URLParameters)
+    
+    LevelID = recdata.split(":")[1]    
+    LevelInfos = GetLevelInfo(LevelID, "")
+    
+    return LevelInfos
 
-def GetWeeklyLevel(printbool):
-    url = "http://www.boomlings.com/database/downloadGJLevel22.php"
-    params = {
+###################################################
+##                                               ##
+##  GET WEEKLY INFORMATIONS                      ##
+##  PARAMS: NONE                                 ##
+##                                               ##
+
+def GetWeeklyLevel():
+    URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
         "gdw": "0",
@@ -245,485 +291,179 @@ def GetWeeklyLevel(printbool):
         "secret": "Wmfd2893gb7"
 
     }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
-    data = GetLevelInfo(recdata.split(":")[1], "", printbool)
-    return data
+    Response = utils.SendHTTPRequest("downloadGJLevel22", URLParameters)
+    
+    LevelID = recdata.split(":")[1]    
+    LevelInfos = GetLevelInfo(LevelID, "")
+    
+    return LevelInfos
 
-def GetPlayersLeaderboard(playercount, printbool):
-    url = "http://www.boomlings.com/database/getGJScores20.php"
-    params = {
+###################################################
+##                                               ##
+##  GET (PLAYERS) LEADERBOARDS INFORMATIONS      ##
+##  PARAMS: PLAYERS COUNT                        ##
+##                                               ##
+
+def GetPlayersLeaderboard(PlayersCount):
+    PlayersCount = str(PlayersCount)
+
+    URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
         "gdw": "0",
         "type": "top",
-        "count": str(playercount),
+        "count": PlayersCount,
         "secret": "Wmfd2893gb7"
 
     }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
+    Response = utils.SendHTTPRequest("getGJScores20", URLParameters)
 
-    if recdata == "-1":
-        if printbool:
-            print("-1")            
-        return "-1"
+    if Response == "-1":          
+        return -1
     
-    data = recdata.split("|")
-    UsersList = []
+    UsersList = []    
+    PlayersParser = Response.split("|")
     
     for i in data:
-        parser = i.split(":")
+        PlayerInfos = i.split(":")
 
         try:
-            user = {
-                "username": parser[1],
-                "stars": parser[23],
-                "cp": parser[25],
-                "usercoins": parser[7],
-                "demons": parser[29],
-                "diamonds": parser[27],
-                "accountid": parser[3],
-                "userid": parser[28]
-                }                    
+            StructureUser(PlayerInfos)               
             UsersList.append(user)
         except:
             pass
         
-    if printbool:
-        print(UsersList)
-        
     return UsersList
 
-def GetCreatorsLeaderboard(playercount, printbool):
-    url = "http://www.boomlings.com/database/getGJScores20.php"
-    params = {
+###################################################
+##                                               ##
+##  GET (CREATORS) LEADERBOARDS INFORMATIONS     ##
+##  PARAMS: PLAYERS COUNT                        ##
+##                                               ##
+
+def GetCreatorsLeaderboard(PlayersCount):
+    PlayersCount = str(PlayersCount)
+
+    URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
         "gdw": "0",
         "type": "creators",
-        "count": str(playercount),
+        "count": PlayersCount,
         "secret": "Wmfd2893gb7"
 
     }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
+    Response = utils.SendHTTPRequest("getGJScores20", URLParameters)
 
-    if recdata == "-1":
-        if printbool:
-            print("-1")            
-        return "-1"
+    if Response == "-1":          
+        return -1
     
-    data = recdata.split("|")
-    UsersList = []
+    UsersList = []    
+    PlayersParser = Response.split("|")
     
     for i in data:
-        parser = i.split(":")
+        PlayerInfos = i.split(":")
 
         try:
-            user = {
-                "username": parser[1],
-                "stars": parser[23],
-                "cp": parser[25],
-                "usercoins": parser[7],
-                "demons": parser[29],
-                "diamonds": parser[27],
-                "accountid": parser[3],
-                "userid": parser[28]
-                }                    
+            StructureUser(PlayerInfos)               
             UsersList.append(user)
         except:
             pass
         
-    if printbool:
-        print(UsersList)
-        
-    return UsersList  
+    return UsersList
 
-def GetFeaturedLevels(page, printbool):
-    url = "http://www.boomlings.com/database/getGJLevels21.php"
-    params = {
+###################################################
+##                                               ##
+##  GET LEVELS LIST                              ##
+##  PARAMS: PAGE - PARAM: TYPE                   ##
+##  USED FOR FUNCTIONS LIKE GET(...)LEVELS       ##
+##                                               ##
+
+def GetLevelList(Page, Param_Type):
+    Page = str(Page)
+    Param_Type = str(Param_Type)
+
+    URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
         "gdw": "0",
         "len": "-",
-        "type": "6",
+        "type": Param_Type,
         "diff": "-",
         "featured": "0",
         "original": "0",
         "twoPlayer": "0",
         "coins": "0",
-        "page": str(page),
+        "page": Page,
         "epic": "0",
         "secret": "Wmfd2893gb7"
 
     }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
-
-    if recdata == "-1":
-        if printbool:
-            print("-1")            
-        return "-1"
+    Response = utils.SendHTTPRequest("getGJLevels21", URLParameters)
+    if Response == "-1":         
+        return -1
     
-    levelparser = recdata.split("|")
-    userdata = recdata.split("#")[1].split("|")
-    LevelsList = []
+    LevelsList = []    
+    LevelParser = Response.split("|")
+    AuthorsData = Response.split("#")[1].split("|")
+    AuthorIndex = 0
     
-    for i in levelparser:
-        authorIndex = 0
-        data = i.split(":")
+    for i in LevelParser:
+        LevelData = i.split(":")
         try:
-            for i in range(len(userdata)):
-                if userdata[i].split(":")[0] == data[7]:
-                    authorIndex = i
+            for i in range(len(AuthorsData)):
+                if AuthorsData[i].split(":")[0] == LevelData[7]:
+                    AuthorIndex = i
                     break
-                
-            leveldata = {
-                "name": data[3],
+
+            LevelInfo = {
+                "name": LevelData[3],
                 "author": {
-                    "name": userdata[authorIndex].split(":")[1],
-                    "accountid": userdata[authorIndex].split(":")[0],
-                    "userid": userdata[authorIndex].split(":")[2]
+                    "name": AuthorsData[AuthorIndex].split(":")[1],
+                    "accountid": AuthorsData[AuthorIndex].split(":")[0],
+                    "userid": AuthorsData[AuthorIndex].split(":")[2]
                     },
-                "id": data[1],
-                "downloads": data[13],
-                "likes": data[19],
-                "description": base64.b64decode(str(data[35])).decode(),
-                "original": data[39],
-                "difficulty": utils.GetDifficulty(data),
-                "length": utils.GetLength(data[37])
+                "id": LevelData[1],
+                "downloads": LevelData[13],
+                "likes": LevelData[19],
+                "description": base64.b64decode(str(LevelData[35])).decode(),
+                "original": LevelData[39],
+                "difficulty": utils.GetDifficulty(LevelData),
+                "length": utils.GetLength(LevelData[37])
             }
 
-
-            LevelsList.append(leveldata)
+            LevelsList.append(LevelInfo)
         except:
             pass
-        
-    if printbool:
-        print(LevelsList)
-                    
+
     return LevelsList
 
-def GetMostDownloadedLevels(page, printbool):
-    url = "http://www.boomlings.com/database/getGJLevels21.php"
-    params = {
-        "gameVersion": "21",
-        "binaryVersion": "35",
-        "gdw": "0",
-        "len": "-",
-        "type": "1",
-        "diff": "-",
-        "featured": "0",
-        "original": "0",
-        "twoPlayer": "0",
-        "coins": "0",
-        "page": str(page),
-        "epic": "0",
-        "secret": "Wmfd2893gb7"
+###################################################
+##                                               ##
+##  GET LEVELS LIST FUNCTIONS                    ##
+##  PARAMS: PAGE                                 ##
+##                                               ##
 
-    }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
+def GetFeaturedLevels(page):
+    result = GetLevelList(page, 6)
+    return result
 
-    if recdata == "-1":
-        if printbool:
-            print("-1")            
-        return "-1"
-    
-    levelparser = recdata.split("|")
-    userdata = recdata.split("#")[1].split("|")
-    LevelsList = []
-    
-    for i in levelparser:
-        authorIndex = 0
-        data = i.split(":")
-        try:
-            for i in range(len(userdata)):
-                if userdata[i].split(":")[0] == data[7]:
-                    authorIndex = i
-                    break
-                
-            leveldata = {
-                "name": data[3],
-                "author": {
-                    "name": userdata[authorIndex].split(":")[1],
-                    "accountid": userdata[authorIndex].split(":")[0],
-                    "userid": userdata[authorIndex].split(":")[2]
-                    },
-                "id": data[1],
-                "downloads": data[13],
-                "likes": data[19],
-                "description": base64.b64decode(str(data[35])).decode(),
-                "original": data[39],
-                "difficulty": utils.GetDifficulty(data),
-                "length": utils.GetLength(data[37])
-            }
+def GetMostDownloadedLevels(page):
+    result = GetLevelList(page, 1)
+    return result
 
+def GetTrending(page):
+    result = GetLevelList(page, 3)
+    return result
 
-            LevelsList.append(leveldata)
-        except:
-            pass
-        
-    if printbool:
-        print(LevelsList)
-                    
-    return LevelsList
+def GetRecentLevels(page):
+    result = GetLevelList(page, 4)
+    return result
 
-def GetTrending(page, printbool):
-    url = "http://www.boomlings.com/database/getGJLevels21.php"
-    params = {
-        "gameVersion": "21",
-        "binaryVersion": "35",
-        "gdw": "0",
-        "len": "-",
-        "type": "3",
-        "diff": "-",
-        "featured": "0",
-        "original": "0",
-        "twoPlayer": "0",
-        "coins": "0",
-        "page": str(page),
-        "epic": "0",
-        "secret": "Wmfd2893gb7"
+def GetAwardedLevels(page):
+    result = GetLevelList(page, 11)
+    return result
 
-    }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
-
-    if recdata == "-1":
-        if printbool:
-            print("-1")            
-        return "-1"
-    
-    levelparser = recdata.split("|")
-    userdata = recdata.split("#")[1].split("|")
-    LevelsList = []
-    
-    for i in levelparser:
-        authorIndex = 0
-        data = i.split(":")
-        try:
-            for i in range(len(userdata)):
-                if userdata[i].split(":")[0] == data[7]:
-                    authorIndex = i
-                    break
-                
-            leveldata = {
-                "name": data[3],
-                "author": {
-                    "name": userdata[authorIndex].split(":")[1],
-                    "accountid": userdata[authorIndex].split(":")[0],
-                    "userid": userdata[authorIndex].split(":")[2]
-                    },
-                "id": data[1],
-                "downloads": data[13],
-                "likes": data[19],
-                "description": base64.b64decode(str(data[35])).decode(),
-                "original": data[39],
-                "difficulty": utils.GetDifficulty(data),
-                "length": utils.GetLength(data[37])
-            }
-
-
-            LevelsList.append(leveldata)
-        except:
-            pass
-        
-    if printbool:
-        print(LevelsList)
-                    
-    return LevelsList
-
-def GetRecentLevels(page, printbool):
-    url = "http://www.boomlings.com/database/getGJLevels21.php"
-    params = {
-        "gameVersion": "21",
-        "binaryVersion": "35",
-        "gdw": "0",
-        "len": "-",
-        "type": "4",
-        "diff": "-",
-        "featured": "0",
-        "original": "0",
-        "twoPlayer": "0",
-        "coins": "0",
-        "page": str(page),
-        "epic": "0",
-        "secret": "Wmfd2893gb7"
-
-    }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
-
-    if recdata == "-1":
-        if printbool:
-            print("-1")            
-        return "-1"
-    
-    levelparser = recdata.split("|")
-    userdata = recdata.split("#")[1].split("|")
-    LevelsList = []
-    
-    for i in levelparser:
-        authorIndex = 0
-        data = i.split(":")
-        try:
-            for i in range(len(userdata)):
-                if userdata[i].split(":")[0] == data[7]:
-                    authorIndex = i
-                    break
-                
-            leveldata = {
-                "name": data[3],
-                "author": {
-                    "name": userdata[authorIndex].split(":")[1],
-                    "accountid": userdata[authorIndex].split(":")[0],
-                    "userid": userdata[authorIndex].split(":")[2]
-                    },
-                "id": data[1],
-                "downloads": data[13],
-                "likes": data[19],
-                "description": base64.b64decode(str(data[35])).decode(),
-                "original": data[39],
-                "difficulty": utils.GetDifficulty(data),
-                "length": utils.GetLength(data[37])
-            }
-
-
-            LevelsList.append(leveldata)
-        except:
-            pass
-        
-    if printbool:
-        print(LevelsList)
-                    
-    return LevelsList
-
-def GetAwardedLevels(page, printbool):
-    url = "http://www.boomlings.com/database/getGJLevels21.php"
-    params = {
-        "gameVersion": "21",
-        "binaryVersion": "35",
-        "gdw": "0",
-        "len": "-",
-        "type": "11",
-        "diff": "-",
-        "featured": "0",
-        "original": "0",
-        "twoPlayer": "0",
-        "coins": "0",
-        "page": str(page),
-        "epic": "0",
-        "secret": "Wmfd2893gb7"
-
-    }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
-
-    if recdata == "-1":
-        if printbool:
-            print("-1")            
-        return "-1"
-    
-    levelparser = recdata.split("|")
-    userdata = recdata.split("#")[1].split("|")
-    LevelsList = []
-    
-    for i in levelparser:
-        authorIndex = 0
-        data = i.split(":")
-        try:
-            for i in range(len(userdata)):
-                if userdata[i].split(":")[0] == data[7]:
-                    authorIndex = i
-                    break
-                
-            leveldata = {
-                "name": data[3],
-                "author": {
-                    "name": userdata[authorIndex].split(":")[1],
-                    "accountid": userdata[authorIndex].split(":")[0],
-                    "userid": userdata[authorIndex].split(":")[2]
-                    },
-                "id": data[1],
-                "downloads": data[13],
-                "likes": data[19],
-                "description": base64.b64decode(str(data[35])).decode(),
-                "original": data[39],
-                "difficulty": utils.GetDifficulty(data),
-                "length": utils.GetLength(data[37])
-            }
-
-            LevelsList.append(leveldata)
-        except:
-            pass
-        
-    if printbool:
-        print(LevelsList)
-                    
-    return LevelsList
-
-def GetMagicLevels(page, printbool):
-    url = "http://www.boomlings.com/database/getGJLevels21.php"
-    params = {
-        "gameVersion": "21",
-        "binaryVersion": "35",
-        "gdw": "0",
-        "len": "-",
-        "type": "7",
-        "diff": "-",
-        "featured": "0",
-        "original": "0",
-        "twoPlayer": "0",
-        "coins": "0",
-        "page": str(page),
-        "epic": "0",
-        "secret": "Wmfd2893gb7"
-
-    }
-    parameters = utils.StructParams(params)  
-    recdata = utils.SendRequest(url, parameters)
-
-    if recdata == "-1":
-        if printbool:
-            print("-1")            
-        return "-1"
-    
-    levelparser = recdata.split("|")
-    userdata = recdata.split("#")[1].split("|")
-    LevelsList = []
-    
-    for i in levelparser:
-        authorIndex = 0
-        data = i.split(":")
-        try:
-            for i in range(len(userdata)):
-                if userdata[i].split(":")[0] == data[7]:
-                    authorIndex = i
-                    break
-                
-            leveldata = {
-                "name": data[3],
-                "author": {
-                    "name": userdata[authorIndex].split(":")[1],
-                    "accountid": userdata[authorIndex].split(":")[0],
-                    "userid": userdata[authorIndex].split(":")[2]
-                    },
-                "id": data[1],
-                "downloads": data[13],
-                "likes": data[19],
-                "description": base64.b64decode(str(data[35])).decode(),
-                "original": data[39],
-                "difficulty": utils.GetDifficulty(data),
-                "length": utils.GetLength(data[37])
-            }
-
-            LevelsList.append(leveldata)
-        except:
-            pass
-        
-    if printbool:
-        print(LevelsList)
-                    
-    return LevelsList
+def GetMagicLevels(page):
+    result = GetLevelList(page, 7)
+    return result
