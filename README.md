@@ -4,7 +4,7 @@ A Geometry Dash API library written in Python.
 <div align="center">
   <br />
   <p>
-    <a><img src="https://www.noelshack.com/2018-19-6-1526157276-sans-titre.png" width="546" alt="GeometryPy" /></a>
+    <a><img src="https://image.noelshack.com/fichiers/2018/19/6/1526157276-sans-titre.png" width="546" alt="GeometryPy" /></a>
   </p>
   <br />
   <p>
