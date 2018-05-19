@@ -25,3 +25,4 @@ print(Level["stars"]) # return 10
 
 LeaderboardCreators = GDClient.GetCreatorsLeaderboard(100)
 print(LeaderboardCreators[0]["username"]) # returns ViPrIn
+ 
