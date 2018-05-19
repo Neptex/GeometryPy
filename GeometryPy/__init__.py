@@ -5,57 +5,57 @@ import GeometryPy.commands as GDPyCommands
 PrintReturn = False
 
 def GetUserInfo(accID):
-    result = GDPyCommands.GetUserInfo(accID, PrintReturn)
+    result = GDPyCommands.GetUserInfo(accID)
     return result
 
 def GetLevelInfo(lvlname, author=""):
-    result = GDPyCommands.GetLevelInfo(lvlname, author, PrintReturn)
+    result = GDPyCommands.GetLevelInfo(lvlname, author)
     return result
 
 def GetSongInfo(songid):
-    result = GDPyCommands.GetSongInfo(songid, PrintReturn)
+    result = GDPyCommands.GetSongInfo(songid)
     return result
 
 def GetDailyLevel():
-    result = GDPyCommands.GetDailyLevel(PrintReturn)
+    result = GDPyCommands.GetDailyLevel()
     return result
 
 def GetWeeklyLevel():
-    result = GDPyCommands.GetWeeklyLevel(PrintReturn)
+    result = GDPyCommands.GetWeeklyLevel()
     return result
 
 def GetPlayersLeaderboard(playercount):
-    result = GDPyCommands.GetPlayersLeaderboard(playercount, PrintReturn)
+    result = GDPyCommands.GetPlayersLeaderboard(playercount)
     return result
 
 def GetCreatorsLeaderboard(playercount):
-    result = GDPyCommands.GetCreatorsLeaderboard(playercount, PrintReturn)
+    result = GDPyCommands.GetCreatorsLeaderboard(playercount)
     return result
 
 def GetFeaturedLevels(page):
-    result = GDPyCommands.GetFeaturedLevels(page, PrintReturn)
+    result = GDPyCommands.GetFeaturedLevels(page)
     return result
 
 def GetMostDownloadedLevels(page):
-    result = GDPyCommands.GetMostDownloadedLevels(page, PrintReturn)
+    result = GDPyCommands.GetMostDownloadedLevels(page)
     return result
 
 def GetMostLikedLevels(page):
-    result = GDPyCommands.GetMostLikedLevels(page, PrintReturn)
+    result = GDPyCommands.GetMostLikedLevels(page)
     return result    
 
 def GetTrending(page):
-    result = GDPyCommands.GetTrending(page, PrintReturn)
+    result = GDPyCommands.GetTrending(page)
     return result
 
 def GetRecentLevels(page):
-    result = GDPyCommands.GetRecentLevels(page, PrintReturn)
+    result = GDPyCommands.GetRecentLevels(page)
     return result
 
 def GetAwardedLevels(page):
-    result = GDPyCommands.GetAwardedLevels(page, PrintReturn)
+    result = GDPyCommands.GetAwardedLevels(page)
     return result
 
 def GetMagicLevels(page):
-    result = GDPyCommands.GetMagicLevels(page, PrintReturn)
+    result = GDPyCommands.GetMagicLevels(page)
     return result
