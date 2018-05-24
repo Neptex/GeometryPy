@@ -2,7 +2,7 @@
 <div align="center">
   <br />
   <p>
-    <a><img src="https://image.noelshack.com/fichiers/2018/19/6/1526157616-sans-titre.png" width="546" alt="GeometryPy" /></a>
+    <a><img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Mangalarga_Marchador_Conforma%C3%A7%C3%A3o.jpg" width="546" alt="GeometryPy" /></a>
   </p>
   <br />
   <p>
