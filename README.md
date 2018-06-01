@@ -34,7 +34,7 @@ You can now start to use GeometryPy! Enjoy!
 | GetPlayersLeaderboard | Players Amount | Returns a list which contains multiples dicts with **top players stats** |
 | GetCreatorsLeaderboard | Players Amount | Returns a list which contains multiples dicts with **top creators stats** |
 | GetFeaturedLevels | Page | Returns a list which contains multiples dicts with **featured levels info** |
-| GetMostDownloadedLevels | Page | Returns a list which contains multiples dicts with most **downloaded levels info** |
+| GetMostDownloadedLevels | Page | Returns a list which contains multiples dicts with **most downloaded levels info** |
 | GetMostLikedLevels | Page | Returns a list which contains multiples dicts with **most liked levels info** |
 | GetRecentLevels | Page | Returns a list which contains multiples dicts with **recents levels info** |
 | GetAwardedLevels | Page | Returns a list which contains multiples dicts with **awarded levels info** |
