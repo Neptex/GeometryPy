@@ -1,3 +1,6 @@
+# By Nerex
+# GitHub: NerexGD
+
 import urllib.request
 from urllib.request import urlopen, Request
 import itertools
@@ -12,9 +15,9 @@ def StructParams(params):
     FinalParams = ""
     for value in params:
         if value == "secret":
-            FinalParams = FinalParams + value + "=" + params[value]
+            FinalParams += value + "=" + params[value]
         else:
-            FinalParams = FinalParams + value + "=" + params[value] + "&"
+            FinalParams += value + "=" + params[value] + "&"
     FinalParams = FinalParams.encode()
     return FinalParams
     
@@ -28,7 +31,7 @@ def SendHTTPRequest(php, params):
     return data
 
 def GetDifficulty(List):
-    leveldifficulty = "N/A"
+    leveldifficulty = None
     
     if List[11] == "50":
         if List[21] == "1":
