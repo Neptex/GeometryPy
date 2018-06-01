@@ -28,17 +28,17 @@ You can now start to use GeometryPy! Enjoy!
 # Functions
 | Function | Parameters | Result |
 |------|------|------------|
-| GetUserInfo | AccountID or Username | Return a dict which contains informations about an **User** |
-| GetLevelInfo | Level Name or LevelID, *Creator (optional)* | Return a dict which contains informations about a **Level**
-| GetSongInfo | SongID | Return a dict which contains informations about a **Song** |
-| GetPlayersLeaderboard | Players Amount | Return a list which contains multiples dicts with **top players stats** |
-| GetCreatorsLeaderboard | Players Amount | Return a list which contains multiples dicts with **top creators stats** |
-| GetFeaturedLevels | Page | Return a list which contains multiples dicts with **featured levels info** |
-| GetMostDownloadedLevels | Page | Return a list which contains multiples dicts with most **downloaded levels info** |
-| GetMostLikedLevels | Page | Return a list which contains multiples dicts with **most liked levels info** |
-| GetRecentLevels | Page | Return a list which contains multiples dicts with **recents levels info** |
-| GetAwardedLevels | Page | Return a list which contains multiples dicts with **awarded levels info** |
-| GetMagicLevels | Page | Return a list which contains multiples dicts with **magics levels info** |
+| GetUserInfo | AccountID or Username | Returns a dict which contains informations about an **User** |
+| GetLevelInfo | Level Name or LevelID, *Creator (optional)* | Returns a dict which contains informations about a **Level**
+| GetSongInfo | SongID | Returns a dict which contains informations about a **Song** |
+| GetPlayersLeaderboard | Players Amount | Returns a list which contains multiples dicts with **top players stats** |
+| GetCreatorsLeaderboard | Players Amount | Returns a list which contains multiples dicts with **top creators stats** |
+| GetFeaturedLevels | Page | Returns a list which contains multiples dicts with **featured levels info** |
+| GetMostDownloadedLevels | Page | Returns a list which contains multiples dicts with most **downloaded levels info** |
+| GetMostLikedLevels | Page | Returns a list which contains multiples dicts with **most liked levels info** |
+| GetRecentLevels | Page | Returns a list which contains multiples dicts with **recents levels info** |
+| GetAwardedLevels | Page | Returns a list which contains multiples dicts with **awarded levels info** |
+| GetMagicLevels | Page | Returns a list which contains multiples dicts with **magics levels info** |
 
 # Example
 In this example, you can get stats of the user "Nerex", Get infos of the level "Cataclysm" but also get the top 100 creators leaderboard!
