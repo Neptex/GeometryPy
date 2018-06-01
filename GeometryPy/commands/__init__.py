@@ -7,8 +7,7 @@ import base64
 ##  PARAMS: ACCOUNTID or USERNAME               ##
 ##                                              ##
 
-def GetUserInfo(User):
-    User = str(User)
+def GetUserInfo(str(User)):
     AccountID = User
     
     if User == "":
@@ -54,7 +53,7 @@ def GetUserInfo(User):
 ##  PARAMS: LEVELNAME and AUTHOR (optional)     ##
 ##                                              ##
 
-def GetLevelInfo(LevelName, creator):
+def GetLevelInfo(LevelName, creator=None):
     if creator == "" or creator == None:
         result = GetLevelInfoByName(LevelName)
         return result
@@ -67,9 +66,8 @@ def GetLevelInfo(LevelName, creator):
 ##   GET LEVEL USING LEVELNAME + CREATOR NAME   ##
 ##                                              ##
         
-def GetLevelInfoByAuthor(LevelName, Creator):
-    Creator = str(Creator)
-    
+def GetLevelInfoByAuthor(LevelName, str(Creator)):
+   
     #Get the accountID of the researched creator
     URLParameters = {
         "gameVersion": "21",
@@ -101,8 +99,8 @@ def GetLevelInfoByAuthor(LevelName, Creator):
         "coins": "0",
         "page": "0",
         "epic": "0",
-        "secret": "Wmfd2893gb7"}
-    
+        "secret": "Wmfd2893gb7"
+    }
     Response = utils.SendHTTPRequest("getGJLevels21", URLParameters)
 
     if Response == "-1":           
@@ -132,9 +130,12 @@ def GetLevelInfoByAuthor(LevelName, Creator):
             AuthorsData = Response.split("#")[1].split("|")
             
             for i in range(len(AuthorsData)):
-                if AuthorsData[i].split(":")[0] == LevelData[7]:
-                    AuthorIndex = i
-                    break
+                try:
+                    if AuthorsData[i].split(":")[0] == LevelData[7]:
+                        AuthorIndex = i
+                        break
+                except:
+                    pass
 
             if LevelData[39] == "0":
                 LevelData[39] = "true"
@@ -154,7 +155,7 @@ def GetLevelInfoByAuthor(LevelName, Creator):
                 "difficulty": utils.GetDifficulty(LevelData),
                 "length": utils.GetLength(LevelData[37])}
         except:
-            return -5
+            return -1
         
         return LevelInfos
     
@@ -162,9 +163,7 @@ def GetLevelInfoByAuthor(LevelName, Creator):
 ##   GET LEVEL INFORMATIONS USING LEVEL NAME    ##
 ##                                              ##
     
-def GetLevelInfoByName(LevelName):
-    LevelName = str(LevelName)
-    
+def GetLevelInfoByName(str(LevelName)):   
     URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
@@ -196,9 +195,12 @@ def GetLevelInfoByName(LevelName):
 
         #Find level author informations
         for i in range(len(AuthorsData)):
-            if AuthorsData[i].split(":")[0] == LevelData[7]:
-                AuthorIndex = i
-                break
+            try:
+                if AuthorsData[i].split(":")[0] == LevelData[7]:
+                    AuthorIndex = i
+                    break
+            except:
+                pass
 
         if LevelData[39] == "0":
             LevelData[39] = "true"
@@ -220,9 +222,10 @@ def GetLevelInfoByName(LevelName):
             }
         
     except:
-        return -5
+        return -1
 
     return LevelInfos
+
 ##################################################
 ##                                              ##
 ##  GET SONG INFORMATIONS                       ##
@@ -303,9 +306,7 @@ def GetWeeklyLevel():
 ##  PARAMS: PLAYERS COUNT                        ##
 ##                                               ##
 
-def GetPlayersLeaderboard(PlayersCount):
-    PlayersCount = str(PlayersCount)
-
+def GetPlayersLeaderboard(str(PlayersCount)):
     URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
@@ -322,6 +323,7 @@ def GetPlayersLeaderboard(PlayersCount):
     
     UsersList = []    
     PlayersParser = Response.split("|")
+    ReturnedPlayersCount = 0
     
     for i in data:
         PlayerInfos = i.split(":")
@@ -329,6 +331,7 @@ def GetPlayersLeaderboard(PlayersCount):
         try:
             StructureUser(PlayerInfos)               
             UsersList.append(user)
+            ReturnedPlayersCount += 1
         except:
             pass
         
@@ -340,9 +343,7 @@ def GetPlayersLeaderboard(PlayersCount):
 ##  PARAMS: PLAYERS COUNT                        ##
 ##                                               ##
 
-def GetCreatorsLeaderboard(PlayersCount):
-    PlayersCount = str(PlayersCount)
-
+def GetCreatorsLeaderboard(str(PlayersCount)):
     URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
@@ -359,13 +360,15 @@ def GetCreatorsLeaderboard(PlayersCount):
     
     UsersList = []    
     PlayersParser = Response.split("|")
-    
+    ReturnedPlayersCount = 0
+        
     for i in data:
         PlayerInfos = i.split(":")
 
         try:
             StructureUser(PlayerInfos)               
             UsersList.append(user)
+            ReturnedPlayersCount += 1
         except:
             pass
         
@@ -399,6 +402,7 @@ def GetLevelList(Page, Param_Type):
 
     }
     Response = utils.SendHTTPRequest("getGJLevels21", URLParameters)
+    
     if Response == "-1":         
         return -1
     
