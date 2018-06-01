@@ -1,3 +1,6 @@
+# By Nerex
+# GitHub: NerexGD
+
 import urllib.request
 from urllib.request import urlopen, Request
 import GeometryPy.commands as GDPyCommands
