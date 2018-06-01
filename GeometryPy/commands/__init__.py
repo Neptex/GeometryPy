@@ -1,3 +1,6 @@
+# By Nerex
+# GitHub: NerexGD
+
 import GeometryPy.utils as utils
 import base64
 
