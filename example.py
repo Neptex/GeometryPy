@@ -19,8 +19,10 @@ print(Player)
 print(Player["username"]) # returns "Nerex"
 
 
-Level = GDClient.GetLevelInfo("Cataclysm") #You can also use a Level ID and specify a creator! (GDClient.GetLevelInfo("Cataclysm", "GgBoy")
-print(Level["stars"]) # return 10
+Level = GDClient.GetLevelInfo("Cataclysm") #You can also use a Level ID and specify a creator! 
+#Level = GDClient.GetLevelInfo("Cataclysm", "GgBoy")
+
+print(Level["stars"]) # returns 10
 
 
 LeaderboardCreators = GDClient.GetCreatorsLeaderboard(100)
