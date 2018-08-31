@@ -82,20 +82,23 @@ def GetLength(lengthint):
     return length
 
 def StructureUser(parser):
-    
-    ## Create a dictionnary
-    StructuredUser = {
-        "username": parser[1],
-        "stars": parser[13],
-        "usercoins": parser[7],
-        "demons": parser[17],
-        "diamonds": parser[15],
-        "cp": parser[19],
-        "youtube": parser[27],
-        "twitter": "@"+parser[53],
-        "twitch": parser[55],
-        "accountid": parser[3],
-        "userid": parser[49]
-        }
+
+    try:
+        ## Create a dictionnary
+        StructuredUser = {
+            "username": parser[1],
+            "stars": parser[13],
+            "usercoins": parser[7],
+            "demons": parser[17],
+            "diamonds": parser[15],
+            "cp": parser[19],
+            "youtube": parser[27],
+            "twitter": "@"+parser[53],
+            "twitch": parser[55],
+            "accountid": parser[3],
+            "userid": parser[49]
+       }
+    except:
+        raise Exception
 
     return StructuredUser

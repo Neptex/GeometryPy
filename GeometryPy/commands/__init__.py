@@ -10,8 +10,9 @@ import base64
 ##  PARAMS: ACCOUNTID or USERNAME               ##
 ##                                              ##
 
-def GetUserInfo(str(User)):
-    AccountID = User
+def GetUserInfo(User):
+    User = str(User)
+    AccountID = str(User)
     
     if User == "":
         return
@@ -69,8 +70,9 @@ def GetLevelInfo(LevelName, creator=None):
 ##   GET LEVEL USING LEVELNAME + CREATOR NAME   ##
 ##                                              ##
         
-def GetLevelInfoByAuthor(LevelName, str(Creator)):
-   
+def GetLevelInfoByAuthor(LevelName, creator):
+    Creator = str(creator)
+    
     #Get the accountID of the researched creator
     URLParameters = {
         "gameVersion": "21",
@@ -150,6 +152,7 @@ def GetLevelInfoByAuthor(LevelName, str(Creator)):
                     "accountid": AuthorsData[authorIndex].split(":")[0],
                     "userid": AuthorsData[authorIndex].split(":")[2]
                     },
+                "stars": LevelData[27],
                 "id": LevelData[1],
                 "downloads": LevelData[13],
                 "likes": LevelData[19],
@@ -166,7 +169,9 @@ def GetLevelInfoByAuthor(LevelName, str(Creator)):
 ##   GET LEVEL INFORMATIONS USING LEVEL NAME    ##
 ##                                              ##
     
-def GetLevelInfoByName(str(LevelName)):   
+def GetLevelInfoByName(LevelName):
+    LevelName = str(LevelName)
+    
     URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
@@ -207,7 +212,8 @@ def GetLevelInfoByName(str(LevelName)):
 
         if LevelData[39] == "0":
             LevelData[39] = "true"
-            
+
+        print(LevelData)
         LevelInfos = {
             "name": LevelData[3],
             "author": {
@@ -215,6 +221,7 @@ def GetLevelInfoByName(str(LevelName)):
                 "accountid": AuthorsData[AuthorIndex].split(":")[0],
                 "userid": AuthorsData[AuthorIndex].split(":")[2]
                 },
+            "stars": LevelData[27],
             "id": LevelData[1],
             "downloads": LevelData[13],
             "likes": LevelData[19],
@@ -309,7 +316,9 @@ def GetWeeklyLevel():
 ##  PARAMS: PLAYERS COUNT                        ##
 ##                                               ##
 
-def GetPlayersLeaderboard(str(PlayersCount)):
+def GetPlayersLeaderboard(PlayersCount):
+    PlayersCount = str(PlayersCount)
+    
     URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
@@ -346,7 +355,9 @@ def GetPlayersLeaderboard(str(PlayersCount)):
 ##  PARAMS: PLAYERS COUNT                        ##
 ##                                               ##
 
-def GetCreatorsLeaderboard(str(PlayersCount)):
+def GetCreatorsLeaderboard(PlayersCount):
+    PlayersCount = str(PlayersCount)
+    
     URLParameters = {
         "gameVersion": "21",
         "binaryVersion": "35",
@@ -364,17 +375,16 @@ def GetCreatorsLeaderboard(str(PlayersCount)):
     UsersList = []    
     PlayersParser = Response.split("|")
     ReturnedPlayersCount = 0
-        
-    for i in data:
-        PlayerInfos = i.split(":")
 
-        try:
-            StructureUser(PlayerInfos)               
-            UsersList.append(user)
+    for Player in PlayersParser:
+        PlayerInfos = Player.split(":")
+        
+        try:             
+            UsersList.append(PlayerInfos[1])
             ReturnedPlayersCount += 1
         except:
             pass
-        
+            
     return UsersList
 
 ###################################################
